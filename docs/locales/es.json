@@ -1,0 +1,13 @@
+{
+  "title": "Invertir 101",
+  "initial_amount": "Cantidad inicial",
+  "monthly_contribution": "Aporte mensual",
+  "rate": "Tasa (APR %)",
+  "years": "Años",
+  "summary": "Resumen",
+  "final_balance": "Balance final",
+  "share": "Compartir",
+  "dark_mode": "Modo oscuro",
+  "balance": "Balance",
+  "link_copied": "¡Enlace copiado!"
+}
