@@ -1,73 +1,154 @@
 <!DOCTYPE html>
-<html lang="en" x-data="investApp" x-init="init()" x-bind:class="{ 'dark': darkMode }" class="h-full" data-theme="light">
+<html lang="en" class="dark">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title data-i18n="title">Invest 101</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://unpkg.com/i18next@22.4.9/i18next.min.js"></script>
-  <script src="https://unpkg.com/i18next-http-backend@2.2.1/i18nextHttpBackend.min.js"></script>
-  <script src="https://unpkg.com/i18next-browser-languagedetector@7.0.1/i18nextBrowserLanguageDetector.min.js"></script>
-  <link rel="stylesheet" href="assets/css/styles.css">
-</head>
-<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-full">
-  <div class="container mx-auto p-4" >
-    <div class="flex justify-between items-center mb-4">
-      <h1 class="text-2xl font-bold" data-i18n="title">Invest 101</h1>
-      <div class="flex gap-4 items-center">
-        <select x-model="language" @change="changeLanguage" class="border rounded p-1">
-          <option value="en">EN</option>
-          <option value="es">ES</option>
-          <option value="ca">CA</option>
-        </select>
-        <label class="flex items-center cursor-pointer">
-          <span class="mr-2" data-i18n="dark_mode">Dark Mode</span>
-          <input type="checkbox" x-model="darkMode" class="toggle">
-        </label>
-      </div>
-    </div>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="head.title">Invest 101 — Compound Interest Calculator</title>
+    <meta name="description" data-i18n="head.description" content="An interactive calculator to visualize how compound interest works. Personalize and project your investment growth over time.">
 
-    <div class="grid md:grid-cols-2 gap-4">
-      <div class="space-y-2">
-        <label class="block">
-          <span data-i18n="initial_amount">Initial Amount</span>
-          <input type="number" x-model.number="initial" class="w-full border p-1 rounded" />
-        </label>
-        <label class="block">
-          <span data-i18n="monthly_contribution">Monthly Contribution</span>
-          <input type="number" x-model.number="monthly" class="w-full border p-1 rounded" />
-        </label>
-        <label class="block">
-          <span data-i18n="rate">Rate (APR %)</span>
-          <input type="number" step="0.1" x-model.number="rate" class="w-full border p-1 rounded" />
-        </label>
-        <label class="block">
-          <span data-i18n="years">Years</span>
-          <input type="number" x-model.number="years" class="w-full border p-1 rounded" />
-        </label>
-        <button @click="share" class="bg-blue-500 text-white px-3 py-1 rounded" data-i18n="share">Share</button>
-      </div>
-      <div>
-        <canvas id="chart" width="400" height="300"></canvas>
-        <table class="mt-4 w-full border" x-show="summary">
-          <thead>
-            <tr class="bg-gray-200 dark:bg-gray-700">
-              <th data-i18n="summary" class="p-2">Summary</th>
-              <th class="p-2"></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="p-2" data-i18n="final_balance">Final Balance</td>
-              <td class="p-2 text-right" x-text="formatCurrency(summary.final)"></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="assets/css/styles.css">
+
+    <!-- Alpine.js 3 CDN (defer to load after DOM parsing) -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <!-- i18next + backend plugin (for loading JSON files) CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/i18next@23.7.11/i18next.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/i18next-http-backend@2.4.2/i18nextHttpBackend.min.js"></script>
+
+    <!-- Chart.js 4 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    
+    <!-- Firebase 9 SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+        import { getAuth } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+        
+        // IMPORTANT: Replace with your Firebase project's configuration
+        const firebaseConfig = {
+          apiKey: "YOUR_API_KEY",
+          authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+          projectId: "YOUR_PROJECT_ID",
+          storageBucket: "YOUR_PROJECT_ID.appspot.com",
+          messagingSenderId: "YOUR_SENDER_ID",
+          appId: "YOUR_APP_ID"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        window.firebaseAuth = getAuth(app); // Attach to window for global access
+    </script>
+</head>
+
+<body class="bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-slate-200 antialiased transition-colors duration-300">
+
+    <div 
+        x-data="invest101" 
+        x-init="init"
+        x-cloak
+        :class="isDark ? 'dark' : ''"
+        class="max-w-7xl mx-auto p-4 md:p-8 font-sans"
+    >
+        <!-- Header -->
+        <header class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-bold text-indigo-600 dark:text-indigo-400">Invest<span class="font-light">101</span></h1>
+            <div class="flex items-center space-x-4">
+                <!-- Language Switcher -->
+                <select x-model="lang" @change="changeLanguage($event.target.value)" class="bg-slate-200 dark:bg-slate-700 border-none rounded-md py-1 px-2 text-sm focus:ring-2 focus:ring-indigo-500">
+                    <option value="en">EN</option>
+                    <option value="es">ES</option>
+                    <option value="ca">CA</option>
+                </select>
+
+                <!-- Dark/Light Mode Toggle -->
+                <button @click="toggleTheme" class="w-10 h-10 flex items-center justify-center rounded-full bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <span x-show="!isDark" class="text-xl">☀️</span>
+                    <span x-show="isDark" class="text-xl">🌙</span>
+                </button>
+
+                <!-- Login Button -->
+                <button x-show="!isLoggedIn" @click="login" class="bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-semibold hover:bg-indigo-700 transition" data-i18n="header.login">Login</button>
+                <div x-show="isLoggedIn" class="flex items-center space-x-3">
+                    <img :src="user.photoURL" class="w-8 h-8 rounded-full" :alt="user.displayName">
+                    <button @click="logout" class="bg-slate-600 text-white px-4 py-2 rounded-md text-sm font-semibold hover:bg-slate-700 transition" data-i18n="header.logout">Logout</button>
+                </div>
+            </div>
+        </header>
+
+        <main class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Left Panel: Calculator Inputs -->
+            <aside class="lg:col-span-1 bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-lg">
+                <h2 class="text-2xl font-semibold mb-6" data-i18n="calculator.title">Calculator</h2>
+                <form @input.debounce.300ms="handleInput" class="space-y-6">
+                    <!-- Initial Amount -->
+                    <div>
+                        <label for="initial" class="flex justify-between items-baseline text-sm font-medium text-slate-600 dark:text-slate-400">
+                            <span data-i18n="calculator.initialAmount">Initial Amount</span>
+                            <span class="text-lg font-semibold text-indigo-600 dark:text-indigo-400" x-text="formatCurrency(initial)"></span>
+                        </label>
+                        <input id="initial" type="range" min="0" max="100000" step="500" x-model.number="initial" class="w-full h-2 bg-slate-200 dark:bg-slate-600 rounded-lg appearance-none cursor-pointer range-thumb">
+                    </div>
+                    <!-- Monthly Contribution -->
+                    <div>
+                        <label for="monthly" class="flex justify-between items-baseline text-sm font-medium text-slate-600 dark:text-slate-400">
+                           <span data-i18n="calculator.monthlyContribution">Monthly Contribution</span>
+                           <span class="text-lg font-semibold text-indigo-600 dark:text-indigo-400" x-text="formatCurrency(monthly)"></span>
+                        </label>
+                        <input id="monthly" type="range" min="0" max="5000" step="50" x-model.number="monthly" class="w-full h-2 bg-slate-200 dark:bg-slate-600 rounded-lg appearance-none cursor-pointer range-thumb">
+                    </div>
+                    <!-- Annual Rate -->
+                    <div>
+                        <label for="rate" class="flex justify-between items-baseline text-sm font-medium text-slate-600 dark:text-slate-400">
+                           <span data-i18n="calculator.annualRate">Annual Rate (%)</span>
+                           <span class="text-lg font-semibold text-indigo-600 dark:text-indigo-400" x-text="rate + '%'" ></span>
+                        </label>
+                        <input id="rate" type="range" min="1" max="20" step="0.5" x-model.number="rate" class="w-full h-2 bg-slate-200 dark:bg-slate-600 rounded-lg appearance-none cursor-pointer range-thumb">
+                    </div>
+                    <!-- Investment Horizon -->
+                    <div>
+                        <label for="years" class="flex justify-between items-baseline text-sm font-medium text-slate-600 dark:text-slate-400">
+                           <span data-i18n="calculator.horizon">Time Horizon (Years)</span>
+                           <span class="text-lg font-semibold text-indigo-600 dark:text-indigo-400" x-text="years"></span>
+                        </label>
+                        <input id="years" type="range" min="1" max="50" step="1" x-model.number="years" class="w-full h-2 bg-slate-200 dark:bg-slate-600 rounded-lg appearance-none cursor-pointer range-thumb">
+                    </div>
+                </form>
+            </aside>
+            
+            <!-- Right Panel: Chart and Summary -->
+            <section class="lg:col-span-2 bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-lg">
+                <div class="h-64 md:h-80 mb-6">
+                    <canvas id="growthChart"></canvas>
+                </div>
+                <hr class="border-slate-200 dark:border-slate-700 my-6">
+                <div>
+                    <h3 class="text-xl font-semibold mb-4" data-i18n="summary.title">Projected Growth</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                        <div>
+                            <p class="text-sm text-slate-500 dark:text-slate-400" data-i18n="summary.totalContributions">Total Contributions</p>
+                            <p class="text-2xl font-bold" x-text="formatCurrency(summary.totalInvested)"></p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-slate-500 dark:text-slate-400" data-i18n="summary.totalInterest">Total Interest</p>
+                            <p class="text-2xl font-bold text-green-600 dark:text-green-400" x-text="formatCurrency(summary.totalInterest)"></p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-slate-500 dark:text-slate-400" data-i18n="summary.finalBalance">Final Balance</p>
+                            <p class="text-2xl font-bold text-indigo-600 dark:text-indigo-400" x-text="formatCurrency(summary.finalValue)"></p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <footer class="text-center mt-8 text-sm text-slate-500 dark:text-slate-400">
+            <p data-i18n="footer.disclaimer">This is an educational tool. Projections are not guaranteed. Consult a financial advisor.</p>
+        </footer>
     </div>
-  </div>
-  <script src="assets/js/app.js"></script>
+    
+    <!-- App Logic & Charting Scripts -->
+    <script src="assets/js/charts.js"></script>
+    <script src="assets/js/app.js"></script>
 </body>
 </html>

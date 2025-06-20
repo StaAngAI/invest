@@ -1,4 +1,23 @@
-.toggle {
-  width: 1.25rem;
-  height: 1.25rem;
+/* Custom styles for elements that are difficult to style with Tailwind utilities */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+[x-cloak] { display: none !important; }
+
+/* Custom Range Slider Thumb */
+.range-thumb::-webkit-slider-thumb {
+    @apply w-5 h-5 bg-indigo-600 rounded-full cursor-pointer appearance-none;
+    -webkit-appearance: none;
+    margin-top: -6px; /* Adjust vertical alignment */
+}
+.range-thumb::-moz-range-thumb {
+    @apply w-5 h-5 bg-indigo-600 rounded-full cursor-pointer border-none;
+}
+
+.dark .range-thumb::-webkit-slider-thumb {
+    @apply bg-indigo-400;
+}
+.dark .range-thumb::-moz-range-thumb {
+    @apply bg-indigo-400;
 }

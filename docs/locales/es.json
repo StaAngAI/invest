@@ -1,13 +1,31 @@
 {
-  "title": "Invertir 101",
-  "initial_amount": "Cantidad inicial",
-  "monthly_contribution": "Aporte mensual",
-  "rate": "Tasa (APR %)",
-  "years": "Años",
-  "summary": "Resumen",
-  "final_balance": "Balance final",
-  "share": "Compartir",
-  "dark_mode": "Modo oscuro",
-  "balance": "Balance",
-  "link_copied": "¡Enlace copiado!"
+  "head": {
+    "title": "Invest 101 — Calculadora de Interés Compuesto",
+    "description": "Una calculadora interactiva para visualizar cómo funciona el interés compuesto. Personaliza y proyecta el crecimiento de tu inversión."
+  },
+  "header": {
+    "login": "Iniciar sesión con Google",
+    "logout": "Cerrar sesión"
+  },
+  "calculator": {
+    "title": "Calculadora",
+    "initialAmount": "Cantidad Inicial",
+    "monthlyContribution": "Aportación Mensual",
+    "annualRate": "Tasa Anual (%)",
+    "horizon": "Horizonte Temporal (Años)"
+  },
+  "summary": {
+    "title": "Proyección de Crecimiento",
+    "totalContributions": "Aportaciones Totales",
+    "totalInterest": "Intereses Totales",
+    "finalBalance": "Balance Final"
+  },
+  "chart": {
+    "year": "Año",
+    "contributions": "Aportaciones",
+    "interest": "Intereses"
+  },
+  "footer": {
+    "disclaimer": "Esta es una herramienta educativa. Las proyecciones no están garantizadas. Consulta a un asesor financiero."
+  }
 }

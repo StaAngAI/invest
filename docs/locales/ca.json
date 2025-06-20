@@ -1,13 +1,31 @@
 {
-  "title": "Invertir 101",
-  "initial_amount": "Quantitat inicial",
-  "monthly_contribution": "Aportació mensual",
-  "rate": "Taxa (APR %)",
-  "years": "Anys",
-  "summary": "Resum",
-  "final_balance": "Balanç final",
-  "share": "Compartir",
-  "dark_mode": "Mode fosc",
-  "balance": "Balanç",
-  "link_copied": "Enllaç copiat!"
+  "head": {
+    "title": "Invest 101 — Calculadora d'Interès Compost",
+    "description": "Una calculadora interactiva per visualitzar com funciona l'interès compost. Personalitza i projecta el creixement de la teva inversió."
+  },
+  "header": {
+    "login": "Inicia sessió amb Google",
+    "logout": "Tanca la sessió"
+  },
+  "calculator": {
+    "title": "Calculadora",
+    "initialAmount": "Quantitat Inicial",
+    "monthlyContribution": "Aportació Mensual",
+    "annualRate": "Taxa Anual (%)",
+    "horizon": "Horitzó Temporal (Anys)"
+  },
+  "summary": {
+    "title": "Projecció de Creixement",
+    "totalContributions": "Aportacions Totals",
+    "totalInterest": "Interessos Totals",
+    "finalBalance": "Balanç Final"
+  },
+  "chart": {
+    "year": "Any",
+    "contributions": "Aportacions",
+    "interest": "Interessos"
+  },
+  "footer": {
+    "disclaimer": "Aquesta és una eina educativa. Les projeccions no estan garantides. Consulta un assessor financer."
+  }
 }
