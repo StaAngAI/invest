@@ -1,0 +1,13 @@
+{
+  "title": "Invest 101",
+  "initial_amount": "Initial Amount",
+  "monthly_contribution": "Monthly Contribution",
+  "rate": "Rate (APR %)",
+  "years": "Years",
+  "summary": "Summary",
+  "final_balance": "Final Balance",
+  "share": "Share",
+  "dark_mode": "Dark Mode",
+  "balance": "Balance",
+  "link_copied": "Link copied!"
+}

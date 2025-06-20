@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" x-data="investApp" x-init="init()" x-bind:class="{ 'dark': darkMode }" class="h-full" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-i18n="title">Invest 101</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://unpkg.com/i18next@22.4.9/i18next.min.js"></script>
+  <script src="https://unpkg.com/i18next-http-backend@2.2.1/i18nextHttpBackend.min.js"></script>
+  <script src="https://unpkg.com/i18next-browser-languagedetector@7.0.1/i18nextBrowserLanguageDetector.min.js"></script>
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-full">
+  <div class="container mx-auto p-4" >
+    <div class="flex justify-between items-center mb-4">
+      <h1 class="text-2xl font-bold" data-i18n="title">Invest 101</h1>
+      <div class="flex gap-4 items-center">
+        <select x-model="language" @change="changeLanguage" class="border rounded p-1">
+          <option value="en">EN</option>
+          <option value="es">ES</option>
+          <option value="ca">CA</option>
+        </select>
+        <label class="flex items-center cursor-pointer">
+          <span class="mr-2" data-i18n="dark_mode">Dark Mode</span>
+          <input type="checkbox" x-model="darkMode" class="toggle">
+        </label>
+      </div>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-4">
+      <div class="space-y-2">
+        <label class="block">
+          <span data-i18n="initial_amount">Initial Amount</span>
+          <input type="number" x-model.number="initial" class="w-full border p-1 rounded" />
+        </label>
+        <label class="block">
+          <span data-i18n="monthly_contribution">Monthly Contribution</span>
+          <input type="number" x-model.number="monthly" class="w-full border p-1 rounded" />
+        </label>
+        <label class="block">
+          <span data-i18n="rate">Rate (APR %)</span>
+          <input type="number" step="0.1" x-model.number="rate" class="w-full border p-1 rounded" />
+        </label>
+        <label class="block">
+          <span data-i18n="years">Years</span>
+          <input type="number" x-model.number="years" class="w-full border p-1 rounded" />
+        </label>
+        <button @click="share" class="bg-blue-500 text-white px-3 py-1 rounded" data-i18n="share">Share</button>
+      </div>
+      <div>
+        <canvas id="chart" width="400" height="300"></canvas>
+        <table class="mt-4 w-full border" x-show="summary">
+          <thead>
+            <tr class="bg-gray-200 dark:bg-gray-700">
+              <th data-i18n="summary" class="p-2">Summary</th>
+              <th class="p-2"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="p-2" data-i18n="final_balance">Final Balance</td>
+              <td class="p-2 text-right" x-text="formatCurrency(summary.final)"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
