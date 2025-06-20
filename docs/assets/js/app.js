@@ -144,7 +144,7 @@ document.addEventListener('alpine:init', () => {
 
         // F2: Personalisation
         initAuth() {
-            firebase.auth.onAuthStateChanged(window.firebaseAuth, (user) => {
+            window.firebaseOnAuthStateChanged(window.firebaseAuth, (user) => {
                 if (user) {
                     this.isLoggedIn = true;
                     this.user = { uid: user.uid, displayName: user.displayName, photoURL: user.photoURL };
@@ -161,15 +161,15 @@ document.addEventListener('alpine:init', () => {
         },
         async login() {
             try {
-                const provider = new firebase.auth.GoogleAuthProvider();
-                await firebase.auth.signInWithPopup(window.firebaseAuth, provider);
+                const provider = new window.firebaseGoogleAuthProvider();
+                await window.firebaseSignInWithPopup(window.firebaseAuth, provider);
             } catch (error) {
                 console.error("Login failed:", error);
             }
         },
         async logout() {
             try {
-                await firebase.auth.signOut(window.firebaseAuth);
+                await window.firebaseSignOut(window.firebaseAuth);
             } catch (error) {
                 console.error("Logout failed:", error);
             }

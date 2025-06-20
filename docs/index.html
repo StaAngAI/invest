@@ -24,7 +24,13 @@
     <!-- Firebase 9 SDKs -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-        import { getAuth } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+        import {
+            getAuth,
+            GoogleAuthProvider,
+            signInWithPopup,
+            signOut,
+            onAuthStateChanged
+        } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
         
         // IMPORTANT: Replace with your Firebase project's configuration
         const firebaseConfig = {
@@ -37,7 +43,13 @@
         };
 
         const app = initializeApp(firebaseConfig);
-        window.firebaseAuth = getAuth(app); // Attach to window for global access
+        const auth = getAuth(app);
+
+        window.firebaseAuth = auth;
+        window.firebaseGoogleAuthProvider = GoogleAuthProvider;
+        window.firebaseSignInWithPopup = signInWithPopup;
+        window.firebaseSignOut = signOut;
+        window.firebaseOnAuthStateChanged = onAuthStateChanged;
     </script>
 </head>
 
@@ -70,7 +82,7 @@
                 <!-- Login Button -->
                 <button x-show="!isLoggedIn" @click="login" class="bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-semibold hover:bg-indigo-700 transition" data-i18n="header.login">Login</button>
                 <div x-show="isLoggedIn" class="flex items-center space-x-3">
-                    <img :src="user.photoURL" class="w-8 h-8 rounded-full" :alt="user.displayName">
+                    <img :src="user ? user.photoURL : ''" class="w-8 h-8 rounded-full" :alt="user ? user.displayName : ''">
                     <button @click="logout" class="bg-slate-600 text-white px-4 py-2 rounded-md text-sm font-semibold hover:bg-slate-700 transition" data-i18n="header.logout">Logout</button>
                 </div>
             </div>
